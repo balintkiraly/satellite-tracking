@@ -25,8 +25,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white relative overflow-hidden`}
       >
+        <div
+          className="absolute top-1/2 left-1/2 w-[600px] h-[600px] 
+               -translate-x-1/2 -translate-y-1/2 
+               rounded-full 
+               bg-gradient-to-tr from-blue-400 via-teal-400 to-green-400 
+               opacity-40 
+               filter blur-[180px] animate-pulse"
+        ></div>{" "}
+        {/* Optional stars overlay */}
+        <div className="absolute inset-0 bg-[url('/textures/milkyway.jpg')] bg-cover bg-center opacity-80 pointer-events-none"></div>
         {children}
       </body>
     </html>

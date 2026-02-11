@@ -6,7 +6,7 @@ export default function SatelliteTooltip({ screenPos, visible }: {
 
   return (
     <div
-      className="absolute bg-black/70 text-white p-2 rounded-md text-sm pointer-events-none"
+      className="absolute bg-black/20 backdrop-blur-lg text-white p-2 rounded-md text-sm pointer-events-none"
       style={{
         left: screenPos.x,
         top: screenPos.y,

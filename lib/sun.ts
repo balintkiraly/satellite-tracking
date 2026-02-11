@@ -42,3 +42,20 @@ export function getSunDirectionUTC(date = new Date()) {
 
   return new Vector3(x, y, z).normalize();
 }
+
+/** Earth rotation (radians) around Y for UTC-aligned globe so day/night matches sun. */
+export function getEarthRotationUTC(date = new Date()) {
+  const rad = Math.PI / 180;
+  const d =
+    date.getTime() / 86400000 +
+    2440587.5 -
+    2451545.0;
+  const q = deg2rad((280.459 + 0.98564736 * d) % 360);
+  const gmst = deg2rad((280.16 + 360.9856235 * d) % 360);
+  const time =
+    date.getUTCHours() +
+    date.getUTCMinutes() / 60 +
+    date.getUTCSeconds() / 3600;
+  const lon = gmst + time * (Math.PI / 12);
+  return lon;
+}

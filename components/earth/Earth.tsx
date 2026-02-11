@@ -1,20 +1,22 @@
 "use client";
 
-import { useLoader, useFrame } from "@react-three/fiber";
-import { TextureLoader, Mesh, Vector3 } from "three";
 import { useRef } from "react";
-import { getSunDirectionUTC } from "@/lib/sun";
+import { useFrame, useLoader } from "@react-three/fiber";
+import { Mesh, TextureLoader, Vector3 } from "three";
 import { useSimTime } from "@/store/simTime";
+import { getSunDirectionUTC, getEarthRotationUTC } from "@/lib/sun";
 
 export default function Earth() {
+  // Load textures
   const dayMap = useLoader(TextureLoader, "/textures/earth.jpg");
   const nightMap = useLoader(TextureLoader, "/textures/nightmap.jpg");
   const cloudsMap = useLoader(TextureLoader, "/textures/earthcloud.jpg");
 
+  // Refs for Earth and clouds
   const earthRef = useRef<Mesh>(null);
   const cloudsRef = useRef<Mesh>(null);
 
-  // ✅ Stable uniforms (VERY important)
+  // Stable shader uniforms
   const uniforms = useRef({
     dayMap: { value: dayMap },
     nightMap: { value: nightMap },
@@ -22,20 +24,17 @@ export default function Earth() {
   });
 
   const time = useSimTime((s) => s.time);
-  
-  useFrame(() => {
-    // Update Sun direction every frame (UTC-aligned)
-    uniforms.current.sunDir.value.copy(getSunDirectionUTC(new Date(time)));
 
-    // Subtle cloud motion
-    if (cloudsRef.current) {
-      cloudsRef.current.rotation.y += 0.0004;
-    }
+  useFrame(() => {
+    uniforms.current.sunDir.value.copy(getSunDirectionUTC(time));
+    const earthRotationY = getEarthRotationUTC(time);
+    if (earthRef.current) earthRef.current.rotation.y = earthRotationY;
+    if (cloudsRef.current) cloudsRef.current.rotation.y = earthRotationY;
   });
 
   return (
     <>
-      {/* 🌍 Earth (day/night shader) */}
+      {/* 🌍 Earth with day/night shader */}
       <mesh ref={earthRef}>
         <sphereGeometry args={[6.371, 64, 64]} />
         <shaderMaterial
@@ -46,10 +45,7 @@ export default function Earth() {
 
             void main() {
               vUv = uv;
-
-              // WORLD-space normal (camera-independent)
               vWorldNormal = normalize(mat3(modelMatrix) * normal);
-
               gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
             }
           `}
@@ -68,11 +64,9 @@ export default function Earth() {
               vec3 dayColor = texture2D(dayMap, vUv).rgb;
               vec3 nightColor = texture2D(nightMap, vUv).rgb;
 
-              // Smooth terminator transition
               float nightFactor = smoothstep(0.15, -0.25, light);
 
               vec3 color = mix(dayColor, nightColor, nightFactor);
-
               gl_FragColor = vec4(color, 1.0);
             }
           `}
@@ -90,7 +84,7 @@ export default function Earth() {
         />
       </mesh>
 
-      {/* 🌫 Atmosphere (simple rim) */}
+      {/* 🌫 Atmosphere rim */}
       <mesh scale={[1.02, 1.02, 1.02]}>
         <sphereGeometry args={[6.371, 64, 64]} />
         <meshBasicMaterial

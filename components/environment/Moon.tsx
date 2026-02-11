@@ -1,9 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { Mesh, TextureLoader } from "three";
-import { useLoader } from "@react-three/fiber";
+import { useSimTime } from "@/store/simTime";
+
+// Moon sidereal orbit period ~27.321661 days (seconds)
+const MOON_ORBIT_PERIOD_SEC = 27.321661 * 86400;
+// Orbit inclination to ecliptic ~5.14°
+const MOON_ORBIT_INCLINATION_RAD = (5.14 * Math.PI) / 180;
 
 interface MoonProps {
   earthPosition?: [number, number, number];
@@ -11,26 +16,32 @@ interface MoonProps {
 
 export default function Moon({ earthPosition = [0, 0, 0] }: MoonProps) {
   const moonRef = useRef<Mesh>(null);
-  const orbitRadius = 60; // scaled distance
-  const moonRadius = 1.1; // scaled radius
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime() * 0.05; // orbital speed
-    const x = earthPosition[0] + orbitRadius * Math.cos(t);
-    const z = earthPosition[2] + orbitRadius * Math.sin(t);
-    const y = earthPosition[1]; // same plane
-    if (moonRef.current) {
-      moonRef.current.position.set(x, y, z);
-    }
-  });
+  const orbitRadius = 384;
+  const moonRadius = 1;
 
   const texture = useLoader(TextureLoader, "/textures/moon.jpg");
+  const simTime = useSimTime((state) => state.time);
+
+  useFrame(() => {
+    const simSeconds = simTime.getTime() / 1000;
+    const t = (simSeconds / MOON_ORBIT_PERIOD_SEC) * 2 * Math.PI;
+
+    // Position in orbital plane (XZ), then apply inclination around X
+    const xPlane = orbitRadius * Math.cos(t);
+    const zPlane = orbitRadius * Math.sin(t);
+    const x = earthPosition[0] + xPlane;
+    const y = earthPosition[1] + zPlane * Math.sin(MOON_ORBIT_INCLINATION_RAD);
+    const z = earthPosition[2] + zPlane * Math.cos(MOON_ORBIT_INCLINATION_RAD);
+
+    if (moonRef.current) {
+      moonRef.current.position.set(x, y, z);
+      moonRef.current.rotation.y = t; // tidally locked: same face to Earth
+    }
+  });
 
   return (
     <mesh ref={moonRef}>
       <sphereGeometry args={[moonRadius, 32, 32]} />
-      <meshStandardMaterial color="lightgray" />
-
       <meshStandardMaterial map={texture} />
     </mesh>
   );

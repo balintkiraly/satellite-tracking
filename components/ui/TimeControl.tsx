@@ -40,7 +40,7 @@ export default function Timeline() {
   }, [startTime, totalRange]);
 
   return (
-    <div className="absolute bottom-6 left-6 bg-black/70 backdrop-blur-md text-white p-5 rounded-xl w-[500px] space-y-3">
+    <div className="absolute bottom-6 left-6 bg-black/20 backdrop-blur-lg text-white p-5 rounded-xl w-[500px] space-y-3">
       
       {/* Zoom Buttons */}
       <div className="flex gap-2 mb-2">

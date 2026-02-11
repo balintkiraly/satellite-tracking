@@ -26,18 +26,18 @@ export default function OrbitPath({ points }: OrbitPathProps) {
   });
   const time = useSimTime((s) => s.time);
   const orbitPoints = useMemo(() => {
-    const pts: [number, number, number][] = []
-    const now = time ? new Date(time) : new Date();
+    const pts: [number, number, number][] = [];
+    const now = time ?? new Date();
     for (let i = 0; i < 100; i++) {
-      const future = new Date(now.getTime() + i * 60000) // 1 min steps
-      const pos = getLatLon(TLE1, TLE2, future)
+      const future = new Date(now.getTime() + i * 60000);
+      const pos = getLatLon(TLE1, TLE2, future);
       if (pos) {
-        const { x, y, z } = latLonAltToXYZ(pos.lat, pos.lon, pos.alt, 6.371)
-        pts.push([x, y, z])
+        const { x, y, z } = latLonAltToXYZ(pos.lat, pos.lon, pos.alt, 6.371);
+        pts.push([x, y, z]);
       }
     }
-    return pts
-  }, [])
+    return pts;
+  }, [time]);
 
   return (
     <Line
