@@ -2,6 +2,7 @@
 
 import { useSimTime, ZoomLevel } from "@/store/simTime";
 import { useMemo } from "react";
+import { Card } from "./Card";
 
 export default function Timeline() {
   const {
@@ -40,8 +41,8 @@ export default function Timeline() {
   }, [startTime, totalRange]);
 
   return (
-    <div className="absolute bottom-6 left-6 bg-black/20 backdrop-blur-lg text-white p-5 rounded-xl w-[500px] space-y-3">
-      
+    <div className="absolute bottom-6 left-6 ">
+      <Card className="p-5 rounded-xl w-[500px] space-y-3">
       {/* Zoom Buttons */}
       <div className="flex gap-2 mb-2">
         {(["1h", "24h", "7d"] as ZoomLevel[]).map((z) => (
@@ -104,7 +105,7 @@ export default function Timeline() {
         ))}
       </div>
 
-      <div className="text-xs opacity-70">Speed: {speed}x</div>
+      <div className="text-xs opacity-70">Speed: {speed}x</div></Card>
     </div>
   );
 }
