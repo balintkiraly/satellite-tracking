@@ -8,9 +8,9 @@ import { getSunDirectionUTC, getEarthRotationUTC } from "@/lib/sun";
 
 export default function Earth() {
   // Load textures
-  const dayMap = useLoader(TextureLoader, "/textures/earth.jpg");
-  const nightMap = useLoader(TextureLoader, "/textures/nightmap.jpg");
-  const cloudsMap = useLoader(TextureLoader, "/textures/earthcloud.jpg");
+  const dayMap = useLoader(TextureLoader, "/textures/earth8k.jpg");
+  const nightMap = useLoader(TextureLoader, "/textures/nightmap8k.jpg");
+  const cloudsMap = useLoader(TextureLoader, "/textures/earthcloud8k.jpg");
 
   // Refs for Earth and clouds
   const earthRef = useRef<Mesh>(null);
