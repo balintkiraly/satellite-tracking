@@ -4,6 +4,7 @@ import { useLoader, useFrame } from "@react-three/fiber";
 import { TextureLoader, Vector3 } from "three";
 import { useRef } from "react";
 import { getSunDirectionUTC } from "@/lib/sun";
+import { useSimTime } from "@/lib/simTime";
 
 export default function Earth() {
   const dayMap = useLoader(TextureLoader, "/textures/earth.jpg");
@@ -20,9 +21,11 @@ export default function Earth() {
     sunDir: { value: new Vector3() },
   });
 
+  const time = useSimTime((s) => s.time);
+  
   useFrame(() => {
     // Update Sun direction every frame (UTC-aligned)
-    uniforms.current.sunDir.value.copy(getSunDirectionUTC(new Date()));
+    uniforms.current.sunDir.value.copy(getSunDirectionUTC(new Date(time)));
 
     // Subtle cloud motion
     if (cloudsRef.current) {

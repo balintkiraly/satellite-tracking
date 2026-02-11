@@ -22,13 +22,13 @@ export default function GroundStationCone({
   // Compute position and cone size
   const { x, y, z } = latLonAltToXYZ(lat, lon, 0, earthRadius)
   const coneHeight = 1.5
-  const coneAngle = Math.acos(earthRadius / (earthRadius + satelliteAlt))
+  const coneAngle = Math.acos(earthRadius / (earthRadius + satelliteAlt)) // angle to satellite
   const coneRadius = Math.tan(coneAngle) * coneHeight
 
   useEffect(() => {
     if (!meshRef.current) return
 
-    const normal = new Vector3(x, y, z).normalize() // direction away from Earth center
+    const normal = new Vector3(-x, -y, -z).normalize() // direction away from Earth center
     const defaultAxis = new Vector3(0, 1, 0) // Three.js cone points +Y
     const quaternion = new Quaternion().setFromUnitVectors(defaultAxis, normal)
 
@@ -38,7 +38,7 @@ export default function GroundStationCone({
   return (
     <mesh ref={meshRef} position={[x, y, z]}>
       <coneGeometry args={[coneRadius, coneHeight, 32]} />
-      <meshStandardMaterial color="yellow" opacity={0.4} transparent />
+      <meshStandardMaterial color="#00aaff" opacity={0.4} transparent />
     </mesh>
   )
 }

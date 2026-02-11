@@ -44,7 +44,7 @@ export default function SatelliteWithTooltip({
     >
       {/* Satellite body */}
       <mesh>
-        <sphereGeometry args={[0.12, 16, 16]} />
+        <boxGeometry args={[0.12, 0.12, 0.12]} />
         <meshStandardMaterial color="#ffffff" emissive="#00ffff" emissiveIntensity={0.6} />
       </mesh>
     </group>

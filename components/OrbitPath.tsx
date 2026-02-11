@@ -6,6 +6,7 @@ import { getLatLon } from "@/lib/satellite"
 import { latLonAltToXYZ } from "@/lib/coords"
 import { Vector3, Color } from "three";
 import { useFrame } from "@react-three/fiber"
+import { useSimTime } from "@/lib/simTime"
 
 const TLE1 = "1 25544U 98067A   23042.51809028  .00012544  00000+0  24459-3 0  9993"
 const TLE2 = "2 25544  51.6430 175.1745 0008488  89.5512  46.2820 15.50015568399915"
@@ -23,9 +24,10 @@ export default function OrbitPath({ points }: OrbitPathProps) {
       lineRef.current.material.opacity = 0.5 + 0.1 * Math.sin(clock.getElapsedTime() * 2);
     }
   });
+  const time = useSimTime((s) => s.time);
   const orbitPoints = useMemo(() => {
     const pts: [number, number, number][] = []
-    const now = new Date()
+    const now = time ? new Date(time) : new Date();
     for (let i = 0; i < 100; i++) {
       const future = new Date(now.getTime() + i * 60000) // 1 min steps
       const pos = getLatLon(TLE1, TLE2, future)

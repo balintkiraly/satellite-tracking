@@ -1,6 +1,7 @@
-import { useState } from "react";
-
-export default function SatelliteTooltip({ screenPos, visible }) {
+export default function SatelliteTooltip({ screenPos, visible }: {
+  screenPos: { x: number; y: number };
+  visible: boolean;
+}) {
   if (!visible) return null;
 
   return (

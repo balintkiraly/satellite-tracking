@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Stats } from "@react-three/drei";
 import Earth from "@/components/Earth";
 import Satellite from "@/components/Satellite";
 import OrbitPath from "@/components/OrbitPath";
@@ -12,6 +12,8 @@ import Moon from "@/components/Moon";
 import SatelliteTooltip from "@/components/SatelliteTooltip";
 import { useState } from "react";
 import MilkyWay from "@/components/MilkyWay";
+import { SimulationClock } from "@/components/SimulationClock";
+import TimeControls from "@/components/TimeControl";
 
 export default function DashboardPage() {
   const [screenPos, setScreenPos] = useState({ x: 0, y: 0 });
@@ -20,6 +22,8 @@ export default function DashboardPage() {
   return (
     <div className="w-full h-screen">
       <Canvas camera={{ position: [0, 0, 20] }}>
+        <SimulationClock />
+        <Stats/>
         <Sun />
         <Moon earthPosition={[0, 0, 0]} />
         <ambientLight intensity={0.5} />
@@ -38,6 +42,7 @@ export default function DashboardPage() {
         <directionalLight position={[50, 50, 50]} intensity={1} />
       </Canvas>
 
+        <TimeControls />
       <SatelliteTooltip screenPos={screenPos} visible={tooltipVisible} />
     </div>
   );
