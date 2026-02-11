@@ -6,7 +6,7 @@ import { getLatLon } from "@/lib/satellite"
 import { latLonAltToXYZ } from "@/lib/coords"
 import { Vector3, Color } from "three";
 import { useFrame } from "@react-three/fiber"
-import { useSimTime } from "@/lib/simTime"
+import { useSimTime } from "@/store/simTime"
 
 const TLE1 = "1 25544U 98067A   23042.51809028  .00012544  00000+0  24459-3 0  9993"
 const TLE2 = "2 25544  51.6430 175.1745 0008488  89.5512  46.2820 15.50015568399915"

@@ -1,18 +1,18 @@
 "use client";
 
 import { useLoader, useFrame } from "@react-three/fiber";
-import { TextureLoader, Vector3 } from "three";
+import { TextureLoader, Mesh, Vector3 } from "three";
 import { useRef } from "react";
 import { getSunDirectionUTC } from "@/lib/sun";
-import { useSimTime } from "@/lib/simTime";
+import { useSimTime } from "@/store/simTime";
 
 export default function Earth() {
   const dayMap = useLoader(TextureLoader, "/textures/earth.jpg");
   const nightMap = useLoader(TextureLoader, "/textures/nightmap.jpg");
   const cloudsMap = useLoader(TextureLoader, "/textures/earthcloud.jpg");
 
-  const earthRef = useRef<THREE.Mesh>(null);
-  const cloudsRef = useRef<THREE.Mesh>(null);
+  const earthRef = useRef<Mesh>(null);
+  const cloudsRef = useRef<Mesh>(null);
 
   // ✅ Stable uniforms (VERY important)
   const uniforms = useRef({

@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useSimTime } from "@/lib/simTime";
+import { useSimTime } from "@/store/simTime";
 
 export const SimulationClock = () => {
   const tick = useSimTime((s) => s.tick);

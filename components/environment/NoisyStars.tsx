@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BufferGeometry, BufferAttribute, PointsMaterial, Points } from "three";
+import { BufferGeometry, BufferAttribute } from "three";
 
 export default function RealStars({ count = 5000 }) {
   const stars = useMemo(() => {

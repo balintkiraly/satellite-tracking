@@ -1,6 +1,6 @@
 "use client";
 
-import { useSimTime, ZoomLevel } from "@/lib/simTime";
+import { useSimTime, ZoomLevel } from "@/store/simTime";
 import { useMemo } from "react";
 
 export default function Timeline() {
