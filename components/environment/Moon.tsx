@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { Mesh, TextureLoader } from "three";
 import { useSimTime } from "@/store/simTime";
+import { useQuality, MOON_SEGMENTS } from "@/store/quality";
 
 // Moon sidereal orbit period ~27.321661 days (seconds)
 const MOON_ORBIT_PERIOD_SEC = 27.321661 * 86400;
@@ -18,6 +19,7 @@ export default function Moon({ earthPosition = [0, 0, 0] }: MoonProps) {
   const moonRef = useRef<Mesh>(null);
   const orbitRadius = 384;
   const moonRadius = 1;
+  const segments = MOON_SEGMENTS[useQuality((s) => s.level)];
 
   const texture = useLoader(TextureLoader, "/textures/moon.jpg");
   const simTime = useSimTime((state) => state.time);
@@ -41,7 +43,7 @@ export default function Moon({ earthPosition = [0, 0, 0] }: MoonProps) {
 
   return (
     <mesh ref={moonRef}>
-      <sphereGeometry args={[moonRadius, 32, 32]} />
+      <sphereGeometry args={[moonRadius, segments, segments]} />
       <meshStandardMaterial map={texture} />
     </mesh>
   );

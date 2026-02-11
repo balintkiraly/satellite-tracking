@@ -17,6 +17,7 @@ import CameraIntro from "@/components/camera/CameraIntro";
 import MapProjection from "@/components/map/MapProjection";
 import TimeControls from "@/components/ui/TimeControl";
 import { ViewToggle } from "@/components/ui/ViewToggle";
+import { QualitySelector } from "@/components/ui/QualitySelector";
 
 const INTRO_START_ANGLE = 0.92;
 const INTRO_START_RADIUS = 108;
@@ -65,6 +66,7 @@ export default function DashboardPage() {
       {viewMode === "2d" && <MapProjection fullScreen />}
       {/* viewMode === "3d" && <MapProjection /> */}
 
+      <QualitySelector />
       <TimeControls />
       <SatelliteTooltip screenPos={screenPos} visible={tooltipVisible} />
       <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />

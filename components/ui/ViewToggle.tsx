@@ -6,7 +6,7 @@ export const ViewToggle = ({
   setViewMode: (mode: "2d" | "3d") => void;
 }) => {
   return (
-    <div className="absolute bottom-4 right-4 z-10 flex gap-1 p-1 rounded-lg bg-black/40 backdrop-blur-sm border border-white/20">
+    <div className="absolute top-4 right-4 z-10 flex gap-1 p-1 rounded-lg bg-black/40 backdrop-blur-sm border border-white/20">
       <button
         onClick={() => setViewMode("3d")}
         className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${

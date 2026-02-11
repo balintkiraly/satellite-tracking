@@ -1,27 +1,35 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { Mesh, TextureLoader, Vector3 } from "three";
 import { useSimTime } from "@/store/simTime";
+import { useQuality, EARTH_TEXTURES, EARTH_SEGMENTS } from "@/store/quality";
 import { getSunDirectionUTC, getEarthRotationUTC } from "@/lib/sun";
 
 export default function Earth() {
-  // Load textures
-  const dayMap = useLoader(TextureLoader, "/textures/earth8k.jpg");
-  const nightMap = useLoader(TextureLoader, "/textures/nightmap8k.jpg");
-  const cloudsMap = useLoader(TextureLoader, "/textures/earthcloud8k.jpg");
+  const quality = useQuality((s) => s.level);
+  const textures = EARTH_TEXTURES[quality];
+  const segments = EARTH_SEGMENTS[quality];
 
-  // Refs for Earth and clouds
+  const dayMap = useLoader(TextureLoader, textures.day);
+  const nightMap = useLoader(TextureLoader, textures.night);
+  const cloudsMap = useLoader(TextureLoader, textures.clouds);
+
   const earthRef = useRef<Mesh>(null);
   const cloudsRef = useRef<Mesh>(null);
 
-  // Stable shader uniforms
   const uniforms = useRef({
     dayMap: { value: dayMap },
     nightMap: { value: nightMap },
     sunDir: { value: new Vector3() },
   });
+
+  // Update shader textures when quality (and thus texture URLs) changes
+  useEffect(() => {
+    uniforms.current.dayMap.value = dayMap;
+    uniforms.current.nightMap.value = nightMap;
+  }, [dayMap, nightMap]);
 
   const time = useSimTime((s) => s.time);
 
@@ -36,7 +44,7 @@ export default function Earth() {
     <>
       {/* 🌍 Earth with day/night shader */}
       <mesh ref={earthRef}>
-        <sphereGeometry args={[6.371, 64, 64]} />
+        <sphereGeometry args={[6.371, segments, segments]} />
         <shaderMaterial
           uniforms={uniforms.current}
           vertexShader={`
@@ -75,7 +83,7 @@ export default function Earth() {
 
       {/* ☁️ Clouds */}
       <mesh ref={cloudsRef} scale={[1.003, 1.003, 1.003]}>
-        <sphereGeometry args={[6.371, 64, 64]} />
+        <sphereGeometry args={[6.371, segments, segments]} />
         <meshStandardMaterial
           map={cloudsMap}
           transparent
@@ -86,7 +94,7 @@ export default function Earth() {
 
       {/* 🌫 Atmosphere rim */}
       <mesh scale={[1.02, 1.02, 1.02]}>
-        <sphereGeometry args={[6.371, 64, 64]} />
+        <sphereGeometry args={[6.371, segments, segments]} />
         <meshBasicMaterial
           color="#88ccff"
           transparent
