@@ -43,6 +43,17 @@ export function getSunDirectionUTC(date = new Date()) {
   return new Vector3(x, y, z).normalize();
 }
 
+/** Subsolar point (lat, lon) in degrees for day/night terminator on a 2D map. */
+export function getSubsolarLatLon(date = new Date()) {
+  const dir = getSunDirectionUTC(date);
+  const latRad = Math.asin(dir.y);
+  const lonRad = Math.atan2(dir.z, dir.x);
+  return {
+    lat: (latRad * 180) / Math.PI,
+    lon: (lonRad * 180) / Math.PI,
+  };
+}
+
 /** Earth rotation (radians) around Y for UTC-aligned globe so day/night matches sun. */
 export function getEarthRotationUTC(date = new Date()) {
   const rad = Math.PI / 180;
