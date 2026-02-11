@@ -79,7 +79,7 @@ export default function Earth() {
         <meshStandardMaterial
           map={cloudsMap}
           transparent
-          opacity={0.45}
+          opacity={0.25}
           depthWrite={false}
         />
       </mesh>

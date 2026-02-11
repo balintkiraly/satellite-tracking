@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stats } from "@react-three/drei";
 import Earth from "@/components/earth/Earth";
@@ -13,15 +13,27 @@ import Moon from "@/components/environment/Moon";
 import SatelliteTooltip from "@/components/ui/SatelliteTooltip";
 import MilkyWay from "@/components/environment/MilkyWay";
 import { SimulationClock } from "@/components/simulations/SimulationClock";
+import CameraIntro from "@/components/camera/CameraIntro";
 import TimeControls from "@/components/ui/TimeControl";
+
+const INTRO_START_ANGLE = 0.92;
+const INTRO_START_RADIUS = 108;
 
 export default function DashboardPage() {
   const [screenPos, setScreenPos] = useState({ x: 0, y: 0 });
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [introComplete, setIntroComplete] = useState(false);
+
+  const initialCameraPosition: [number, number, number] = [
+    Math.sin(INTRO_START_ANGLE) * INTRO_START_RADIUS,
+    0,
+    Math.cos(INTRO_START_ANGLE) * INTRO_START_RADIUS,
+  ];
 
   return (
     <div className="w-full h-screen">
-      <Canvas camera={{ position: [0, 0, 20] }}>
+      <Canvas camera={{ position: initialCameraPosition, fov: 55 }}>
+        <CameraIntro onComplete={() => setIntroComplete(true)} delay={1} />
         <SimulationClock />
         <Stats />
         <Sun />
@@ -30,16 +42,17 @@ export default function DashboardPage() {
         <pointLight position={[10, 10, 10]} />
         <MilkyWay />
         <NoisyStars />
+        <GroundStationCone lat={46.5} lon={19.1} satelliteAlt={0.4} />
         <Earth />
         <Satellite
           setScreenPos={setScreenPos}
           toggleTooltip={() => setTooltipVisible(!tooltipVisible)}
         />
         <OrbitPath />
-        <GroundStationCone lat={46.5} lon={19.1} satelliteAlt={0.4} />
 
-        <OrbitControls />
+        <OrbitControls enabled={introComplete} />
         <directionalLight position={[50, 50, 50]} intensity={1} />
+
       </Canvas>
 
       <TimeControls />
